@@ -1,12 +1,32 @@
 [project]
 name = "dbt-cost-sim"
 version = "0.1.0"
-description = "Add your description here"
+description = "Estimate the BigQuery cost delta of a dbt model change before you merge, via dry-run."
+readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+    "google-cloud-bigquery>=3.25",
+]
+
+[project.scripts]
+dbt-cost-sim = "dbt_cost_sim.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dbt_cost_sim"]
 
 [dependency-groups]
 dev = [
     "pytest>=9.1.1",
     "ruff>=0.16.6",
 ]
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

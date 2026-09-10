@@ -1,0 +1,29 @@
+{
+  "nodes": {
+    "model.fixtures.unchanged_model": {
+      "resource_type": "model",
+      "name": "unchanged_model",
+      "compiled_code": "select id, name from raw.customers"
+    },
+    "model.fixtures.modified_model": {
+      "resource_type": "model",
+      "name": "modified_model",
+      "compiled_code": "select id, total from raw.orders where status = 'open'"
+    },
+    "model.fixtures.not_yet_compiled": {
+      "resource_type": "model",
+      "name": "not_yet_compiled",
+      "compiled_code": null
+    },
+    "model.fixtures.new_model": {
+      "resource_type": "model",
+      "name": "new_model",
+      "compiled_code": "select * from raw.events"
+    },
+    "test.fixtures.not_a_model": {
+      "resource_type": "test",
+      "name": "not_a_model",
+      "compiled_code": "select 1"
+    }
+  }
+}
