@@ -1,0 +1,44 @@
+# Secrets — NEVER commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.secrets/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.python-version
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+dist/
+build/
+*.egg-info/
+
+# Node
+node_modules/
+.next/
+.turbo/
+.npm/
+.pnpm-store/
+
+# Go
+bin/
+*.test
+
+# Logs / coverage
+*.log
+coverage/
+.coverage
