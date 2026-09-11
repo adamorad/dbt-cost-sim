@@ -1,5 +1,10 @@
 # dbt-cost-sim
 
+[![CI](https://github.com/adamorad/dbt-cost-sim/actions/workflows/ci.yml/badge.svg)](https://github.com/adamorad/dbt-cost-sim/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/dbt-cost-sim.svg)](https://pypi.org/project/dbt-cost-sim/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
+
 Know what a dbt model change will cost **before** you merge it.
 
 `dbt-cost-sim` compares a dbt project's *compiled* SQL between two states (a base ref and a target ref), and for every model whose SQL actually changed, uses BigQuery's [dry-run](https://cloud.google.com/bigquery/docs/dry-run-queries) API to estimate the bytes it will scan — and therefore its on-demand cost — without running the query or touching any data.
@@ -29,6 +34,12 @@ FinOps tools see cost, not lineage. Data catalogs see lineage, not cost. Neither
 
 ```sh
 pip install dbt-cost-sim
+```
+
+Not yet on PyPI — the release pipeline is wired up (see [Releasing](#releasing)) but no version has been published yet. Until then, install from GitHub:
+
+```sh
+pip install git+https://github.com/adamorad/dbt-cost-sim.git
 # or, for local development:
 uv sync
 ```
@@ -111,9 +122,21 @@ mise install && uv sync
 uv run pytest
 uv run ruff check .
 uv run ruff format .
+uv run mypy
 ```
 
-All core logic (manifest parsing, diffing, cost math) is unit-tested against a `DryRunClient` protocol with a fake implementation — no real GCP credentials are needed to run the test suite.
+All core logic (manifest parsing, diffing, cost math) is unit-tested against a `DryRunClient` protocol with a fake implementation — no real GCP credentials are needed to run the test suite. `git_compile.py` (the `diff-refs` orchestration) is tested against a real temporary git repo with a stubbed `dbt` binary.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to submit changes.
+
+## Releasing
+
+Publishing to PyPI uses [trusted publishing](https://docs.pypi.org/trusted-publishers/) (OIDC) — no API token is stored in the repo. One-time setup, for maintainers:
+
+1. On [pypi.org](https://pypi.org), under your account's Publishing settings, add a **pending publisher** for a new project named `dbt-cost-sim`: owner `adamorad`, repository `dbt-cost-sim`, workflow `release.yml`, environment `pypi`.
+2. In this repo's GitHub settings, create an environment named `pypi` (optionally with required reviewers, for an extra approval gate before publishing).
+
+After that, cutting a release is: bump `version` in `pyproject.toml`, then create a GitHub Release (tag `vX.Y.Z`). The [release workflow](.github/workflows/release.yml) runs the full test/lint/type-check suite, builds the package, and publishes to PyPI automatically.
 
 ## Roadmap
 
@@ -135,8 +158,10 @@ src/dbt_cost_sim/
 tests/              — unit tests (fixtures under tests/fixtures/)
 docs/               — documentation
 archive/            — parked old work
+.github/workflows/  — CI (test/lint/type-check) and release (build + PyPI publish)
 CHANGES.md          — notable changes
 CLAUDE.md           — agent behavioral rules + project notes
+CONTRIBUTING.md     — how to submit changes
 SECURITY.md         — vulnerability reporting
 ```
 
