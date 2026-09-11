@@ -49,7 +49,7 @@ class BigQueryDryRunClient:
             job = self._client.query(sql, job_config=job_config)
         except GoogleAPIError as exc:
             raise DryRunError(str(exc)) from exc
-        return job.total_bytes_processed
+        return int(job.total_bytes_processed)
 
 
 def bytes_to_usd(num_bytes: int, price_per_tib_usd: float = DEFAULT_PRICE_PER_TIB_USD) -> float:
